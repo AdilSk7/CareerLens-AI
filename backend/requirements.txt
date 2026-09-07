@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+gunicorn
+pydantic
+pymupdf
+firebase-admin
+python-multipart
+httpx
+google-generativeai
+python-docx
+python-pptx

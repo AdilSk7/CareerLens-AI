@@ -1,0 +1,4 @@
+src/components/ResumeManager.tsx(1,28): error TS6133: 'useEffect' is declared but its value is never read.
+src/components/ResumeManager.tsx(7,1): error TS6133: 'ResumeAnalysisType' is declared but its value is never read.
+src/components/ResumeManager.tsx(123,7): error TS2552: Cannot find name 'setResumes'. Did you mean 'resumes'?
+src/components/ResumeManager.tsx(153,7): error TS2552: Cannot find name 'setResumes'. Did you mean 'resumes'?

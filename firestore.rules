@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      // Users can only read and write their own document
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    match /resumes/{resumeId} {
+      // Users can only read, update, delete their own resumes
+      allow read, update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
+      // Users can only create a resume linked to their own userId
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+    }
+
+    match /interviewSessions/{sessionId} {
+      // Users can only read their own sessions
+      allow read, delete: if request.auth != null && resource.data.userId == request.auth.uid;
+      // Users can only create a session linked to their own userId
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+    }
+    
+    // Default deny all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
