@@ -109,6 +109,7 @@ async def call_llm(
                 model=GROQ_MODEL,
                 messages=messages,
                 temperature=0.2,
+                response_format={"type": "json_object"}
             )
             raw = completion.choices[0].message.content
             clean = _extract_json(raw)
