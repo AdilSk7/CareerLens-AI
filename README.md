@@ -30,105 +30,13 @@
 
 ---
 
-## 🚀 Local Development Setup
+## 🧠 How It Works
 
-To run CareerLens AI on your local machine, you will need to set up both the Backend and Frontend environments.
-
-### 1. Backend Setup
-
-The backend handles all AI communication, PDF parsing, and Firestore database operations.
-
-```bash
-cd backend
-
-# Create a virtual environment and activate it
-python -m venv venv
-# On Windows:
-venv\Scripts\activate
-# On Mac/Linux:
-source venv/bin/activate
-
-# Install strictly pinned requirements
-pip install -r requirements.txt
-```
-
-**Environment Variables (`backend/.env`)**
-Create a `.env` file in the `backend` folder and add the following:
-```env
-# AI Provider configuration ('groq' or 'gemini')
-AI_PROVIDER=groq
-GROQ_API_KEY=your_groq_api_key_here
-GROQ_MODEL=llama-3.1-70b-versatile  # or your preferred model
-
-GEMINI_API_KEY=your_gemini_api_key_here
-GEMINI_MODEL=gemini-1.5-flash
-
-# Firebase Admin SDK absolute path or relative path
-FIREBASE_CREDENTIALS_PATH=firebase-service-account.json
-
-# Allowed origin for CORS (Local development)
-FRONTEND_URL=http://localhost:5173
-```
-*Note: Make sure to drop your `firebase-service-account.json` file inside the `backend` directory so FastAPI can connect to your Firestore database.*
-
-**Run the Backend Server**
-```bash
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-```
-The backend will be available at `http://localhost:8000`.
-
-### 2. Frontend Setup
-
-The frontend provides the responsive user interface built on top of Vite and TailwindCSS.
-
-```bash
-cd frontend
-
-# Install Node dependencies
-npm install 
-# or yarn install
-```
-
-**Environment Variables (`frontend/.env`)**
-Create a `.env` file in the `frontend` folder and add your Firebase Client configuration:
-```env
-VITE_API_BASE_URL=http://127.0.0.1:8000
-
-VITE_FIREBASE_API_KEY=your_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your_project_id
-VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-VITE_FIREBASE_APP_ID=your_app_id
-```
-
-**Run the Frontend Development Server**
-```bash
-npm run dev
-```
-The frontend will be available at `http://localhost:5173`.
-
----
-
-## 🌍 Production Deployment
-
-CareerLens AI utilizes a robust split-deployment topology perfectly suited for separating static UI rendering from heavy Python PDF/AI processing.
-
-### Backend (Render)
-1. Link your GitHub repository to Render as a **Web Service**.
-2. **Build Command**: `pip install -r backend/requirements.txt`
-3. **Start Command**: `gunicorn -k uvicorn.workers.UvicornWorker -w 1 backend.app.main:app`
-4. Set the Root Directory to `backend/`.
-5. Under `Environment Variables`, configure all your keys, and set `FRONTEND_URL` to your Vercel URL.
-6. Under `Secret Files`, strictly upload your `firebase-service-account.json`.
-
-### Frontend (Vercel)
-1. Link your GitHub repository to Vercel.
-2. Ensure the Framework Preset is explicitly detected as **Vite**.
-3. Set the Root Directory to `frontend`.
-4. Ensure `VITE_API_BASE_URL` points to your newly deployed Render application URL (e.g., `https://careerlens-ai-sd5x.onrender.com`).
-5. Populate all the `VITE_FIREBASE_*` credentials.
-6. Hit **Deploy**!
+1. **Upload & Parse**: When a user drops a resume PDF, the backend instantly streams it to PyMuPDF for lightning-fast text extraction.
+2. **AI Inference**: The extracted text is dispatched to Groq (or Gemini) alongside strict JSON-enforced prompts, identifying technologies, soft skills, and exact years of experience, even if they are buried in complex paragraphs.
+3. **Storage & Sync**: The heavily structured JSON response is saved to Firebase Firestore. The frontend seamlessly listens to this data, populating rich, interactive dashboards in a fraction of a second.
+4. **Targeted Job Matching**: If the user pastes a target job description, the AI performs a bidirectional semantic comparison, outputting exact alignment metrics heavily sought after by real-world ATS software.
+5. **Interview Engine**: Utilizing the structured resume layout, the Mock Interview engine acts as a hiring manager, generating and evaluating real-time responses to highly personalized behavioral questions.
 
 ---
 
