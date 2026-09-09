@@ -9,3 +9,4 @@ httpx
 google-generativeai>=0.8.2
 python-docx
 python-pptx
+groq
