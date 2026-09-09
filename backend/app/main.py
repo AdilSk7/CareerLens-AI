@@ -191,7 +191,10 @@ async def analyze_resume(doc_id: str, token_data: dict = Depends(verify_token)):
         
     # Find local file
     file_url = data.get("fileUrl", "")
-    relative_path = file_url.replace("http://127.0.0.1:8000/api/uploads/", "")
+    if "/api/uploads/" in file_url:
+        relative_path = file_url.split("/api/uploads/")[-1]
+    else:
+        raise HTTPException(status_code=400, detail="Invalid file URL format.")
     local_target = os.path.join(UPLOAD_DIR, os.path.normpath(relative_path))
     
     if not os.path.exists(local_target):
@@ -357,8 +360,8 @@ async def delete_resume(doc_id: str, token_data: dict = Depends(verify_token)):
     
     # Try to delete local file
     file_url = data.get("fileUrl", "")
-    if file_url.startswith("http://127.0.0.1:8000/api/uploads/"):
-        relative_path = file_url.replace("http://127.0.0.1:8000/api/uploads/", "")
+    if "/api/uploads/" in file_url:
+        relative_path = file_url.split("/api/uploads/")[-1]
         local_target = os.path.join(UPLOAD_DIR, os.path.normpath(relative_path))
         if os.path.exists(local_target) and user_id in local_target:
             try:
