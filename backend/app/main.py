@@ -3,7 +3,7 @@ import json
 import asyncio
 import uuid
 import shutil
-from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File
+from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -66,7 +66,7 @@ def health_check():
     return {"status": "healthy"}
 
 @app.post("/api/resume/process")
-async def process_resume(file: UploadFile = File(...), token_data: dict = Depends(verify_token)):
+async def process_resume(request: Request, file: UploadFile = File(...), token_data: dict = Depends(verify_token)):
     user_id = token_data.get("uid")
     if not user_id:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid User ID in token")
@@ -93,7 +93,8 @@ async def process_resume(file: UploadFile = File(...), token_data: dict = Depend
 
     # Generate local URL bridging to our static mount
     # Frontend uses this to render the externalLink button
-    local_url = f"http://127.0.0.1:8000/api/uploads/{user_id}/{safe_filename}"
+    base_url = str(request.base_url).rstrip("/")
+    local_url = f"{base_url}/api/uploads/{user_id}/{safe_filename}"
 
     try:
         # Extract text using local pdf path
