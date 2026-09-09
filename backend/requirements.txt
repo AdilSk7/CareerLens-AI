@@ -3,9 +3,9 @@ uvicorn[standard]
 gunicorn
 pydantic
 pymupdf
-firebase-admin
+firebase-admin>=6.5.0
 python-multipart
 httpx
-google-generativeai
+google-generativeai>=0.8.2
 python-docx
 python-pptx
