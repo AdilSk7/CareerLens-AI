@@ -120,7 +120,9 @@ async def analyze_resume_text(text: str) -> dict:
         "  - Extracurriculars, Activities, Leadership, Clubs, and Student Organizations MUST go "
         "under extracurricular_activities.\n"
         "  - If there is no professional/paid work experience, return an empty work_experience array [].\n"
-        "- Do NOT force every category to contain values. If something is genuinely absent, return [].\n"
+        "- Do NOT force every category to contain values, EXCEPT for 'category_scores', 'strengths', and 'areas_for_improvement'.\n"
+        "- YOU MUST ALWAYS populate 'category_scores' with realistic integer scores (0-100) based on the resume quality.\n"
+        "- YOU MUST ALWAYS provide at least one string in 'strengths' and 'areas_for_improvement'.\n"
         "- Output must be purely raw JSON matching the structure shown. No markdown code blocks.\n\n"
         "Return JSON matching EXACTLY this structure:\n"
         + _RESUME_EXAMPLE
