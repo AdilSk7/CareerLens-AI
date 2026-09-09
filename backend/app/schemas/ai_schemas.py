@@ -24,12 +24,12 @@ class ExtracurricularItem(BaseModel):
     description: List[str] = Field(default_factory=list, description="A list of activities or responsibilities undertaken.")
 
 class CategoryScores(BaseModel):
-    skills_score: int = Field(description="Score from 0-100 assessing the strength and relevance of technical and soft skills.")
-    experience_score: int = Field(description="Score from 0-100 assessing the depth, impact, and relevance of work experience.")
-    education_score: int = Field(description="Score from 0-100 assessing the educational background.")
-    projects_score: int = Field(description="Score from 0-100 assessing the complexity and relevance of projects.")
-    keywords_score: int = Field(description="Score from 0-100 assessing the presence of industry-standard ATS keywords.")
-    formatting_score: int = Field(description="Score from 0-100 assessing the structural organization and readability of the text.")
+    skills_score: int = Field(default=0, description="Score from 0-100 assessing the strength and relevance of technical and soft skills.")
+    experience_score: int = Field(default=0, description="Score from 0-100 assessing the depth, impact, and relevance of work experience.")
+    education_score: int = Field(default=0, description="Score from 0-100 assessing the educational background.")
+    projects_score: int = Field(default=0, description="Score from 0-100 assessing the complexity and relevance of projects.")
+    keywords_score: int = Field(default=0, description="Score from 0-100 assessing the presence of industry-standard ATS keywords.")
+    formatting_score: int = Field(default=0, description="Score from 0-100 assessing the structural organization and readability of the text.")
 
 class ResumeAnalysis(BaseModel):
     professional_summary: str = Field(description="A professionally written 2-3 sentence overview of the candidate's entire resume.")
@@ -48,8 +48,7 @@ class ResumeAnalysis(BaseModel):
     strengths: List[str] = Field(default_factory=list, description="A list of the candidate's strongest points based on the resume content.")
     areas_for_improvement: List[str] = Field(default_factory=list, description="A list of constructive, professional suggestions for improving the resume.")
     suggested_job_roles: List[str] = Field(default_factory=list, description="A list of 3-5 job roles the candidate is highly suited for based on the resume.")
-    category_scores: CategoryScores = Field(description="Individual scoring categories, each out of 100.")
-
+    category_scores: Optional[CategoryScores] = Field(default_factory=CategoryScores, description="Individual scoring categories, each out of 100.")
 class JobMatchRequest(BaseModel):
     job_description: str
 
