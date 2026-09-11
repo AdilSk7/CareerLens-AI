@@ -4,6 +4,7 @@ import { useResumes } from '../hooks/useResumes';
 import { useAuth } from '../contexts/AuthContext';
 import { Briefcase, Plus, Trash2, Edit3, Wand2, ExternalLink, X, Loader2, CheckCircle2, Target, AlertCircle, FileText, Eye } from 'lucide-react';
 import { JobDescriptionInput } from '../components/JobDescriptionInput';
+import { Link } from 'react-router-dom';
 
 export function ApplicationsPage() {
   const { currentUser } = useAuth();
@@ -492,9 +493,9 @@ export function ApplicationsPage() {
                       <span className="font-semibold text-slate-700 dark:text-slate-300">
                         {resumes.find(r => r.id === viewApp.resume_id)?.fileName || "Unknown Resume"}
                       </span>
-                      <a href="/dashboard" className="text-blue-500 hover:text-blue-600 transition-colors bg-blue-50 dark:bg-blue-900/20 p-1.5 rounded-md" title="Open in Dashboard">
+                      <Link to="/dashboard" className="text-blue-500 hover:text-blue-600 transition-colors bg-blue-50 dark:bg-blue-900/20 p-1.5 rounded-md" title="Open in Dashboard">
                         <ExternalLink className="w-4 h-4" />
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 )}
