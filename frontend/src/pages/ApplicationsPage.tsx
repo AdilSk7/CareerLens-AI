@@ -485,6 +485,19 @@ export function ApplicationsPage() {
                     </a>
                   </div>
                 )}
+                {viewApp.resume_id && (
+                  <div className="col-span-2">
+                    <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Target Resume</div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300">
+                        {resumes.find(r => r.id === viewApp.resume_id)?.fileName || "Unknown Resume"}
+                      </span>
+                      <a href="/dashboard" className="text-blue-500 hover:text-blue-600 transition-colors bg-blue-50 dark:bg-blue-900/20 p-1.5 rounded-md" title="Open in Dashboard">
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {viewApp.notes && (
