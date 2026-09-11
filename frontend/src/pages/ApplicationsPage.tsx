@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useApplications, type ApplicationRecord } from '../hooks/useApplications';
 import { useResumes } from '../hooks/useResumes';
 import { useAuth } from '../contexts/AuthContext';
-import { Briefcase, Plus, Trash2, Edit3, Wand2, ExternalLink, X, Loader2, CheckCircle2, Target, AlertCircle, FileText } from 'lucide-react';
+import { Briefcase, Plus, Trash2, Edit3, Wand2, ExternalLink, X, Loader2, CheckCircle2, Target, AlertCircle, FileText, Eye } from 'lucide-react';
 import { JobDescriptionInput } from '../components/JobDescriptionInput';
 
 export function ApplicationsPage() {
@@ -12,6 +12,7 @@ export function ApplicationsPage() {
   
   const [isAppModalOpen, setIsAppModalOpen] = useState(false);
   const [editingApp, setEditingApp] = useState<ApplicationRecord | null>(null);
+  const [viewApp, setViewApp] = useState<ApplicationRecord | null>(null);
   
   const [formData, setFormData] = useState({
     company_name: '',
@@ -232,6 +233,9 @@ export function ApplicationsPage() {
                           <Wand2 className="w-4 h-4" />
                           {app.tailored_resume_data ? "View Tailored" : "Tailor"}
                         </button>
+                        <button onClick={() => setViewApp(app)} className="p-2 text-slate-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors" title="View Details">
+                          <Eye className="w-4 h-4" />
+                        </button>
                         <button onClick={() => openEditModal(app)} className="p-2 text-slate-400 hover:text-indigo-600 dark:hover:text-amber-400 transition-colors">
                           <Edit3 className="w-4 h-4" />
                         </button>
@@ -446,6 +450,70 @@ export function ApplicationsPage() {
                 </button>
               </div>
             )}
+          </div>
+        </div>
+      )}
+      {/* View Modal */}
+      {viewApp && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-slate-900/20 dark:bg-black/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-[#101A2E] w-full max-w-2xl rounded-2xl shadow-xl dark:border dark:border-[#24334A] overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="p-6 border-b border-slate-100 dark:border-[#24334A] flex items-center justify-between">
+              <h2 className="text-xl font-bold dark:text-white flex items-center gap-2">
+                <Briefcase className="text-blue-500 w-5 h-5" /> 
+                {viewApp.job_title} @ {viewApp.company_name}
+              </h2>
+              <button onClick={() => setViewApp(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-white">
+                <X className="w-6 h-6"/>
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto space-y-6">
+              <div className="grid grid-cols-2 gap-4 bg-slate-50 dark:bg-[#142038] p-4 rounded-xl border border-slate-100 dark:border-[#24334A]">
+                <div>
+                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Status</div>
+                  {getStatusBadge(viewApp.status)}
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Date Added</div>
+                  <div className="font-semibold text-slate-700 dark:text-slate-300">{new Date(viewApp.createdAt).toLocaleDateString()}</div>
+                </div>
+                {viewApp.job_url && (
+                  <div className="col-span-2">
+                    <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Job Link</div>
+                    <a href={viewApp.job_url} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline flex items-center gap-1 font-medium overflow-hidden text-ellipsis whitespace-nowrap">
+                      {viewApp.job_url} <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                )}
+              </div>
+
+              {viewApp.notes && (
+                <div>
+                  <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-2 border-b border-slate-100 dark:border-[#24334A] pb-2">Notes</h3>
+                  <p className="text-slate-600 dark:text-slate-400 whitespace-pre-wrap text-sm leading-relaxed">
+                    {viewApp.notes}
+                  </p>
+                </div>
+              )}
+
+              <div>
+                <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-2 border-b border-slate-100 dark:border-[#24334A] pb-2">Target Job Description</h3>
+                <div className="bg-slate-50 dark:bg-[#0A1120] border border-slate-100 dark:border-[#24334A] rounded-lg p-4 max-h-[300px] overflow-y-auto">
+                  <pre className="text-sm font-mono whitespace-pre-wrap text-slate-700 dark:text-slate-400">
+                    {viewApp.job_description || "No job description added."}
+                  </pre>
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-4 border-t border-slate-100 dark:border-[#24334A] flex justify-end bg-slate-50 dark:bg-[#101A2E]">
+              <button 
+                onClick={() => setViewApp(null)} 
+                className="px-6 py-2 bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 font-bold rounded-lg hover:bg-slate-700 dark:hover:bg-white transition-colors"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
